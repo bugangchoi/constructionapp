@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 # 엑셀 파일을 pandas 데이터프레임으로 읽어 들입니다.
-df = pd.read_excel("test.xlsx")
+df = pd.read_excel("test.xlsx", engine='openpyxl')
 
 
 st.markdown("<h1 style='text-align: center'>건설안전사고 예측 시스템</h1>", unsafe_allow_html=True)
