@@ -30,7 +30,7 @@ st.markdown("<h2 stlye='text-align: center'>우리 현장의 안전지수</h2>",
 
 safety_score = filtered_df["안전지수"].values[0]
 col1, col2=st.columns(2)
-col1.metric("점수", safety_score)
+col1.metric("점수", str(safety_score))
 col2.metric("전체 사고 수 대비 해당 작업 사고 발생률", "20%")
 
 col1, col2 = st.columns([1, 2])
