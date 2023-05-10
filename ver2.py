@@ -3,7 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-# 엑셀 파일을 pandas 데이터프레임으로 읽어 들입니다.
 df = pd.read_excel("test.xlsx", engine='openpyxl')
 
 
@@ -13,15 +12,10 @@ process_types = df["작업프로세스"].unique().tolist()
 process_type = st.selectbox("작업 프로세스 종류 선택", process_types)
 
 
-# 입력한 작업 프로세스 종류에 따라 데이터를 필터링합니다.
 filtered_df = df[df["작업프로세스"] == process_type]
-if len(filtered_df) == 0:
-    st.warning("해당 작업 프로세스 종류의 데이터가 없습니다.")
-    st.stop()
 
 st.markdown("---")
 
-# 안전지수 원형 그래프를 생성합니다.
 st.markdown("<h2 style='text-align: center'>우리 현장의 안전지수</h2>", unsafe_allow_html=True)
 
 safety_score = filtered_df["안전지수"].values[0]
@@ -31,7 +25,7 @@ col2.metric("전체 사고 수 대비 해당 작업 사고 발생률", "20%")
 
 col1, col2 = st.columns([1, 2])
 
-# col1에는 원형 그래프를 표시합니다.
+
 with col1:
     st.markdown("<div style='border-radius: 10px; background-color: #F5F5F5; padding: 10px;'>", unsafe_allow_html=True)
     st.markdown("<h4 style='text-align: center'>safe index</h4>", unsafe_allow_html=True)
@@ -55,7 +49,6 @@ st.markdown("---")
 
 st.markdown("<h3 style='text-align: center'>주요 원인 및 재발방지 대책</h3>", unsafe_allow_html=True)
 
-# 주요 원인과 재발방지 대책을 표시합니다.
 col1,col2=st.columns([1,2])
 with col1:
     st.write("주원인1-1: ", filtered_df["주원인1-1"].values[0])
