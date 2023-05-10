@@ -31,7 +31,7 @@ if len(filtered_df) == 0:
 st.markdown("---")
 
 # 안전지수 원형 그래프를 생성합니다.
-st.markdown("<h2 stlye='text-align: center'>우리 현장의 안전지수</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center'>우리 현장의 안전지수</h2>", unsafe_allow_html=True)
 
 safety_score = filtered_df["안전지수"].values[0]
 col1, col2=st.columns(2)
