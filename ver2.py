@@ -1,10 +1,6 @@
 import subprocess
 
-def install_dependencies():
-    subprocess.check_call(['pip', 'install', '-r', 'requirements.txt'])
-
-install_dependencies()
-
+subprocess.check_call(['pip', 'install', '-r', 'requirements.txt'])
 
 
 import streamlit as st
