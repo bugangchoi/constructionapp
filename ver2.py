@@ -13,25 +13,55 @@ st.write("")
 st.write("")
 process_types = df["작업프로세스"].unique().tolist()
 process_type = st.selectbox("작업 프로세스 종류 선택", process_types)
+option = st.selectbox(
+    '안전방호조치 여부',
+    ('조치', '비조치', '해당없음'))
 
 filtered_df = df[df["작업프로세스"] == process_type]
 city="seoul"
+lang="kr"
 api="9b833c0ea6426b70902aa7a4b1da285c"
-url=f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api}"
+url=f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api}&lang={lang}"
 response=requests.get(url)
 x=response.json()
 cel=273.15
 temp_unit=" °C"
 safety_score = filtered_df["안전지수"].values[0]
-accidentpercent=20
 
-temp=str(round(x["main"]["temp"]-cel,2))
+def get_safety_color(score):
+    if score <= 20:
+        return 'red'
+    elif score <= 40:
+        return 'orange'
+    elif score <= 60:
+        return 'yellow'
+    else:
+        return 'skyblue'
+
+def get_safety_text(score):
+    if score <= 20:
+        return '위험'
+    elif score <= 40:
+        return '주의'
+    elif score <= 60:
+        return '보통'
+    else:
+        return '안전'
+
+color = get_safety_color(safety_score)
+text = get_safety_text(safety_score)
+
+temp=round(x["main"]["temp"]-cel,2)
 icon=x["weather"][0]["icon"]
 current_weather=x["weather"][0]["description"].title()
+humidity=x['main']['humidity']
 
 st.write("")
 st.write("")
 st.markdown("---")
+score_html = f"<h1 style='text-align: center; color: {color}; font-weight: bold;'>{safety_score}</h1>"
+text_html = f"<h4 style='text-align: center; color: {color};'>{text}</h4>"
+
 
 col1, col2 = st.columns([1, 2])
 
@@ -41,24 +71,23 @@ with col1:
     st.markdown("<h4 style='text-align: center'>오늘의 안전지수</h4>", unsafe_allow_html=True)
     st.write("")
     st.write("")
-    fig, ax = plt.subplots()
-    ax.pie([safety_score, 100 - safety_score], labels=[safety_score, ""], colors=['skyblue', 'white'])
-    ax.axis('equal')
-    st.pyplot(fig)
-    st.markdown("</div>", unsafe_allow_html=True)
-
+    st.markdown(score_html, unsafe_allow_html=True)
+    st.markdown(text_html, unsafe_allow_html=True)
 
 with col2:
     st.markdown("<h4 style='text-align: center'>오늘의 알림</h4>", unsafe_allow_html=True)
-    
-    accident_type = filtered_df["사고유형1"].values[0]
-    prevention_measure = filtered_df["재발방지1-1"].values[0]
-    st.write("")
-    st.write("")
-    st.write("오늘의 작업 중 발생빈도가 높은 사고 유형은 **{}** 이므로".format(accident_type))
-    st.write("**{}** 에 주의하시기 바랍니다.".format(prevention_measure))
-
+    alert = Image.open('알림.png')
+    st.image(alert, use_column_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
+    if humidity >= 70:
+        humidity_alert = Image.open('습도알림.png')
+        st.image(humidity_alert, use_column_width=True)
+    if temp >= 24:
+        temperature_alert = Image.open('기온알림.png')
+        st.image(temperature_alert, use_column_width=True)
+    if option == "비조치":
+        safety_alert = Image.open('방호조치알림.png')
+        st.image(safety_alert, use_column_width=True)
 
 st.markdown("---")
 example1_url = "https://www.csi.go.kr/com/imageViewProc.do?file_no=mUN3ynYi9kdRnTRykUqVSA=="
@@ -69,18 +98,16 @@ st.write("")
 st.write("")
 col1, col2 = st.columns(2)
 with col1:
+    imginfo1 = Image.open('사례1.png')
     st.image(example1_url, use_column_width=True)
+    st.image(imginfo1, use_column_width=True)
 with col2:
+    imginfo2 = Image.open('사례2.png')
     st.image(example2_url, use_column_width=True)
+    st.image(imginfo2, use_column_width=True)
 st.write("")
 st.write("")
-col1, col2 = st.columns(2)
-with col1:
-    st.markdown("<h5 style='text-align: center'>철근콘크리트 공사-시스템동바리</h5>", unsafe_allow_html=True)
-    st.markdown("<h6 style='text-align: center'>새벽 우천 후 시스템비계 작업발판에서 거푸집 조립 작업 후 이동하며 넘어짐, 요추 골절 발생</h6>", unsafe_allow_html=True)
-with col2:
-    st.markdown("<h5 style='text-align: center;'>철골 공사</h5>", unsafe_allow_html=True)
-    st.markdown("<h6 style='text-align: center;'>지붕 층 슬라브에서 철근 운반 중 기 배근된 철근에 전도방지 조치 미흡으로 걸려 넘어짐, 발목 골절</h6>", unsafe_allow_html=True)
+
 
 
 st.markdown("---")
@@ -88,13 +115,18 @@ st.markdown("<h2 style='text-align: center'>오늘의 날씨</h2>", unsafe_allow
 st.write("")
 st.write("")
 
-col1, col2=st.columns(2)
+col1, col2, col3=st.columns(3)
 with col1:
     st.markdown("""
                 <h3 style='text-align: center;'>기온</h3>
                 <h4 style='text-align: center;'><br>{}</h4>
-    """.format(str(temp+temp_unit)),unsafe_allow_html=True)
+    """.format(str(temp) + temp_unit),unsafe_allow_html=True)
 with col2:
+    st.markdown("""
+                <h3 style='text-align: center;'>습도</h3>
+                <h4 style='text-align: center;'><br>{}</h4>
+    """.format(str(humidity)),unsafe_allow_html=True)
+with col3:
     st.markdown("""
                 <h3 style='text-align: center;'>날씨</h3>
                 <h4 style='text-align: center;'><br>{}</h4>
