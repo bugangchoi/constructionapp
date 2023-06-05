@@ -14,8 +14,8 @@ st.write("")
 process_types = df["작업프로세스"].unique().tolist()
 process_type = st.selectbox("작업 프로세스 종류 선택", process_types)
 option = st.selectbox(
-    '안전방호조치 여부',
-    ('조치', '비조치', '해당없음'))
+    '공정율',
+    ('10% 미만', '10~19%', '20~29%', '30~39%', '40~49%', '50~59%', '60~69%', '70~79%', '80~89%', '90% 이상'))
 
 filtered_df = df[df["작업프로세스"] == process_type]
 city="seoul"
@@ -26,24 +26,111 @@ response=requests.get(url)
 x=response.json()
 cel=273.15
 temp_unit=" °C"
-safety_score = filtered_df["안전지수"].values[0]
+temp=round(x["main"]["temp"]-cel,2)
+icon=x["weather"][0]["icon"]
+current_weather=x["weather"][0]["description"].title()
+humidity=x['main']['humidity']
+
+def get_temp_score(temp):
+    if temp>23 and temp<=26: 
+        return 20
+    if temp>20 and temp<=23:
+        return 17.2
+    if temp>26 and temp<=29:
+        return 15.8
+    if temp>17 and temp<=20:
+        return 12.9
+    if temp>8 and temp<=11:
+        return 12.4
+    if temp>14 and temp<=17:
+        return 12.2
+    if temp>5 and temp<=8:
+        return 11.8
+    if temp>2 and temp<=5:
+        return 9.9
+    if temp>11 and temp<=14:
+        return 9.5
+    if temp>29 and temp<=32:
+        return 8.6
+    if temp>-1 and temp <=2:
+        return 6.1
+    if temp>-4 and temp<=-1:
+        return 1.9
+    if temp>-7 and temp<=-4:
+        return 0.6
+    if temp>-10 and temp<=-7:
+        return 0
+    else:
+        return '범위 밖'
+    
+temp_score=get_temp_score(temp)
+
+def get_humidity_score(humidity):
+    if humidity>50 and humidity<=60:
+       return 20
+    if humidity>60 and humidity<=70:
+        return 19.9
+    if humidity>40 and humidity<=50:
+        return 12.2
+    if humidity>30 and humidity<=40:
+        return 10.9
+    if humidity>70 and humidity<=80:
+        return 9.9
+    if humidity>20 and humidity<=30:
+        return 5.0
+    if humidity>80 and humidity<=90:
+        return 3.3
+    if humidity>90 and humidity<=100:
+        return 1.0
+    if humidity>10 and humidity<=20:
+        return 0.9
+    if humidity>=0 and humidity<=10:
+        return 0
+    
+humidity_score=get_humidity_score(humidity)
+
+def get_processrate_score(option):
+    if option=='10% 미만':
+        return 7.0
+    if option=='10~19%':
+        return 20.0
+    if option=='20~29%':
+        return 19.2
+    if option=='30~39%':
+        return 16.5
+    if option=='40~49%':
+        return 8.8
+    if option=='50~59%':
+        return 7.0
+    if option=='60~69%':
+        return 2.1
+    if option=='70~79%':
+        return 1.7
+    if option=='80~89%':
+        return 0.0
+    if option=='90% 이상':
+        return 2.1
+
+processrate_score=get_processrate_score(option)
+
+safety_score = round(20+11+temp_score+humidity_score+processrate_score)
 
 def get_safety_color(score):
-    if score <= 20:
+    if score >= 80:
         return 'red'
-    elif score <= 40:
+    elif score >= 60:
         return 'orange'
-    elif score <= 60:
+    elif score >= 40:
         return 'yellow'
     else:
         return 'skyblue'
 
 def get_safety_text(score):
-    if score <= 20:
+    if score >= 80:
         return '위험'
-    elif score <= 40:
+    elif score >= 60:
         return '주의'
-    elif score <= 60:
+    elif score >= 40:
         return '보통'
     else:
         return '안전'
@@ -51,10 +138,7 @@ def get_safety_text(score):
 color = get_safety_color(safety_score)
 text = get_safety_text(safety_score)
 
-temp=round(x["main"]["temp"]-cel,2)
-icon=x["weather"][0]["icon"]
-current_weather=x["weather"][0]["description"].title()
-humidity=x['main']['humidity']
+
 
 st.write("")
 st.write("")
