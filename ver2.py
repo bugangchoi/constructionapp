@@ -13,6 +13,8 @@ st.write("")
 st.write("")
 process_types = df["작업프로세스"].unique().tolist()
 process_type = st.selectbox("작업 프로세스 종류 선택", process_types)
+st.write("")
+st.write("")
 option = st.selectbox(
     '공정율',
     ('10% 미만', '10~19%', '20~29%', '30~39%', '40~49%', '50~59%', '60~69%', '70~79%', '80~89%', '90% 이상'))
@@ -115,6 +117,7 @@ processrate_score=get_processrate_score(option)
 
 safety_score = round(20+11+temp_score+humidity_score+processrate_score)
 
+
 def get_safety_color(score):
     if score >= 80:
         return 'red'
@@ -143,13 +146,13 @@ text = get_safety_text(safety_score)
 st.write("")
 st.write("")
 st.markdown("---")
+st.write("")
+st.write("")
 score_html = f"<h1 style='text-align: center; color: {color}; font-weight: bold;'>{safety_score}</h1>"
 text_html = f"<h4 style='text-align: center; color: {color};'>{text}</h4>"
 
 
 col1, col2 = st.columns([1, 2])
-
-plt.rcParams.update({'font.size': 18})
 
 with col1:
     st.markdown("<h4 style='text-align: center'>오늘의 안전지수</h4>", unsafe_allow_html=True)
@@ -161,8 +164,12 @@ with col1:
 with col2:
     st.markdown("<h4 style='text-align: center'>오늘의 알림</h4>", unsafe_allow_html=True)
     alert = Image.open('알림.png')
+    st.write("")
+    st.write("")
     st.image(alert, use_column_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
+    st.write("")
+    st.write("")
     if humidity >= 70:
         humidity_alert = Image.open('습도알림.png')
         st.image(humidity_alert, use_column_width=True)
@@ -176,22 +183,31 @@ with col2:
 st.markdown("---")
 example1_url = "https://www.csi.go.kr/com/imageViewProc.do?file_no=mUN3ynYi9kdRnTRykUqVSA=="
 example2_url = "https://www.csi.go.kr/com/imageViewProc.do?file_no=pn/13Ei2W4Mbni3FjWp/UQ=="
-
+st.write("")
+st.write("")
 st.markdown("<h2 style='text-align: center'>해당 작업 사고사례</h2>", unsafe_allow_html=True)
 st.write("")
 st.write("")
 col1, col2 = st.columns(2)
 with col1:
+    st.write("")
+    st.write("")
     imginfo1 = Image.open('사례1.png')
     st.image(example1_url, use_column_width=True)
     st.image(imginfo1, use_column_width=True)
+    st.write("")
+    st.write("")
 with col2:
+    st.write("")
+    st.write("")
     imginfo2 = Image.open('사례2.png')
     st.image(example2_url, use_column_width=True)
     st.image(imginfo2, use_column_width=True)
-st.write("")
-st.write("")
+    st.write("")
+    st.write("")
 
+st.write("")
+st.write("")
 
 
 st.markdown("---")
@@ -201,20 +217,32 @@ st.write("")
 
 col1, col2, col3=st.columns(3)
 with col1:
+    st.write("")
+    st.write("")
     st.markdown("""
                 <h3 style='text-align: center;'>기온</h3>
                 <h4 style='text-align: center;'><br>{}</h4>
     """.format(str(temp) + temp_unit),unsafe_allow_html=True)
+    st.write("")
+    st.write("")
 with col2:
+    st.write("")
+    st.write("")
     st.markdown("""
                 <h3 style='text-align: center;'>습도</h3>
                 <h4 style='text-align: center;'><br>{}</h4>
     """.format(str(humidity)),unsafe_allow_html=True)
+    st.write("")
+    st.write("")
 with col3:
+    st.write("")
+    st.write("")
     st.markdown("""
                 <h3 style='text-align: center;'>날씨</h3>
                 <h4 style='text-align: center;'><br>{}</h4>
     """.format(str(current_weather)),unsafe_allow_html=True)
+    st.write("")
+    st.write("")
 st.subheader(" ")
 
 st.markdown("---")
@@ -222,6 +250,7 @@ st.write("")
 st.write("")
 
 st.markdown("<h3 style='text-align: center'>주요 원인 및 재발방지 대책</h3>", unsafe_allow_html=True)
-
+st.write("")
+st.write("")
 image = Image.open('사고유형.png')
 st.image(image, use_column_width=True)
