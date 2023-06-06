@@ -28,6 +28,7 @@ response=requests.get(url)
 x=response.json()
 cel=273.15
 temp_unit=" °C"
+humidity_unit="%"
 temp=round(x["main"]["temp"]-cel,2)
 icon=x["weather"][0]["icon"]
 current_weather=x["weather"][0]["description"].title()
@@ -231,7 +232,7 @@ with col2:
     st.markdown("""
                 <h3 style='text-align: center;'>습도</h3>
                 <h4 style='text-align: center;'><br>{}</h4>
-    """.format(str(humidity)),unsafe_allow_html=True)
+    """.format(str(humidity) + humidity_unit),unsafe_allow_html=True)
     st.write("")
     st.write("")
 with col3:
