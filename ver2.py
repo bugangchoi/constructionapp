@@ -155,7 +155,7 @@ text_html = f"<h4 style='text-align: center; color: {color};'>{text}</h4>"
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    st.markdown("<h4 style='text-align: center'>오늘의 안전지수</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center'>오늘의 위험지수</h4>", unsafe_allow_html=True)
     st.write("")
     st.write("")
     st.markdown(score_html, unsafe_allow_html=True)
